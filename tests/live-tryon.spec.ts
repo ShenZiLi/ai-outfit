@@ -8,7 +8,10 @@ test('真实公共模型：本地衣物→上传→生成→本地历史→保�
   await page.getByRole('button', { name: '选择 云朵白 · 宽松衬衫' }).click();
   await page.getByRole('button', { name: '生成试衣效果', exact: true }).click();
   await page.getByRole('button', { name: '同意并开始试衣' }).click();
-  await expect(page.getByText('已保存在本地', { exact: true })).toBeVisible({ timeout: 245_000 });
+  await Promise.race([
+    expect(page.getByText('已保存在本地', { exact: true })).toBeVisible({ timeout: 245_000 }),
+    page.locator('.error-message').waitFor({ timeout: 245_000 }).then(async () => { throw new Error(await page.locator('.error-message').innerText()); }),
+  ]);
   const result = page.getByAltText('云朵白 · 宽松衬衫的真实 AI 试衣结果');
   await expect(result).toHaveAttribute('src', /^data:image\/jpeg;base64,/);
   await page.screenshot({ path: 'artifacts/screenshots/live-browser-tryon.png', fullPage: true });

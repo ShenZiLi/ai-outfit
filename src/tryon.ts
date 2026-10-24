@@ -1,5 +1,5 @@
 import { validImage, type Category, type Profile } from './domain';
-import { nativeRequest, readImage } from './media';
+import { nativeRequest, readImage, sourceToBlob } from './media';
 export const origins = { fashn: 'https://fashn-ai-fashn-vton-1-5.hf.space', idm: 'https://yisol-idm-vton.hf.space' };
 export interface TryonInput { person: string; garment: string; category: Category; provider: Profile['provider']; description?: string; apiKey?: string; apiBase?: string }
 export function validateTryonInput(input: TryonInput) {
@@ -82,8 +82,8 @@ async function runGradio(input: TryonInput, signal: AbortSignal, status: (messag
   const abort = () => { void job?.cancel(); client.close(); };
   try {
     signal.throwIfAborted();
-    const person = await fetch(input.person).then(r => r.blob());
-    const garment = await fetch(input.garment).then(r => r.blob());
+    const person = await sourceToBlob(input.person);
+    const garment = await sourceToBlob(input.garment);
     signal.throwIfAborted(); status('正在上传所选照片');
     const category = input.category === '下装' ? 'bottoms' : input.category === '连衣裙' ? 'one-pieces' : 'tops';
     job = provider === 'fashn' ? client.submit('/try_on', [handle_file(person), handle_file(garment), category, 'flat-lay', 30, 1.5, 42, true]) :

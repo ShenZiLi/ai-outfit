@@ -58,8 +58,20 @@ export async function rasterImage(source: string): Promise<string> {
   ctx.fillStyle = '#f7f6f2'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   return canvas.toDataURL('image/jpeg', .9);
 }
+export async function sourceToBlob(source: string): Promise<Blob> {
+  if (source.startsWith('data:')) {
+    const match = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=\s]+)$/.exec(source);
+    if (!match) throw new Error('图片数据格式无效');
+    const decoded = atob(match[2].replace(/\s/g, ''));
+    const bytes = Uint8Array.from(decoded, char => char.charCodeAt(0));
+    return new Blob([bytes], { type: match[1] });
+  }
+  const response = await fetch(source);
+  if (!response.ok) throw new Error('图片读取失败');
+  return response.blob();
+}
 export async function downloadFile(name: string, mime: string, content: string, base64 = false) {
-  const blob = base64 ? await fetch(content).then(r => r.blob()) : new Blob([content], { type: mime });
+  const blob = base64 ? await sourceToBlob(content) : new Blob([content], { type: mime });
   if (window.YixuNative) {
     const payload = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(blob);
