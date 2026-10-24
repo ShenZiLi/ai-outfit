@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { validateGarment, filterGarments, suggestOutfits, removeGarment, parseBackup, makeBackup } from '../src/domain';
+import {
+  validateGarment,
+  filterGarments,
+  suggestOutfits,
+  removeGarment,
+  parseBackup,
+  makeBackup,
+} from '../src/domain';
 import { initialState } from '../src/seed';
 
 describe('衣橱业务与安全备份', () => {
@@ -11,7 +18,7 @@ describe('衣橱业务与安全备份', () => {
     const items = initialState().garments;
     expect(filterGarments(items, { query: '白', category: '上装' }).length).toBeGreaterThan(0);
     expect(filterGarments(items, { query: '不存在' })).toHaveLength(0);
-    expect(filterGarments(items, { favorite: true }).every(g => g.favorite)).toBe(true);
+    expect(filterGarments(items, { favorite: true }).every((g) => g.favorite)).toBe(true);
   });
   it('用用户衣橱给出不重复的上下装组合及解释', () => {
     const outfits = suggestOutfits(initialState().garments, '通勤');
@@ -26,11 +33,22 @@ describe('衣橱业务与安全备份', () => {
   it('删除衣物清理穿搭引用但保留试衣历史图片', () => {
     const state = initialState();
     const id = state.garments[0].id;
-    state.outfits = [{ id: 'o1', name: '搭配', garmentIds: [id, state.garments[1].id], occasion: '通勤', note: '', favorite: false, createdAt: '2026-10-24', wornDates: [] }];
+    state.outfits = [
+      {
+        id: 'o1',
+        name: '搭配',
+        garmentIds: [id, state.garments[1].id],
+        occasion: '通勤',
+        note: '',
+        favorite: false,
+        createdAt: '2026-10-24',
+        wornDates: [],
+      },
+    ];
     const result = removeGarment(state, id);
-    expect(result.garments.some(g => g.id === id)).toBe(false);
+    expect(result.garments.some((g) => g.id === id)).toBe(false);
     expect(result.outfits[0].garmentIds).not.toContain(id);
-    expect(state.garments.some(g => g.id === id)).toBe(true);
+    expect(state.garments.some((g) => g.id === id)).toBe(true);
   });
   it('备份可恢复且不含服务密钥，拒绝损坏/错版本/坏图片', () => {
     const state = initialState();

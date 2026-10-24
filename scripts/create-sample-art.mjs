@@ -10,8 +10,20 @@ const shapes = {
   'dress-black': `<path d="m127 44 16 7q17 19 34 0l16-7 17 26-24 53q-8 33 1 57l54 113H79l54-113q9-24 1-57l-24-53Z" fill="url(#cloth)"/><path d="M133 132q27 10 54 0M130 171q30 9 60 0M136 187l-24 98m45-96-7 96m23-96 20 96"/><path d="m128 46 9 38m55-38-9 38" stroke-width="4"/>`,
   'bag-brown': `<path d="M115 126V95q0-68 45-68t45 68v31h-18V94q0-49-27-49t-27 49v32Z" fill="#78563e"/><path d="M88 113q70-18 144 0l20 147q-90 29-184 0Z" fill="url(#cloth)"/><path d="M88 114q71 24 144 0l-11 61q-62 19-122 0Z" fill="#977456"/><path d="m82 246 14-109m144 109-15-109" stroke="#b99573"/><rect x="147" y="166" width="27" height="24" rx="3" fill="#bfa672" stroke="#d1ba88"/><path d="M157 170h7v16h-7Z" fill="#75543c"/>`,
 };
-const colors = { 'shirt-white': ['#fffefa','#d9d8ce'], 'blazer-dark': ['#515352','#25282a'], 'pants-sand': ['#d2c2aa','#b2a18a'], 'knit-sage': ['#9ba692','#697c67'], 'jeans-blue': ['#8394a8','#4e6780'], 'loafers-black': ['#393b38','#151a17'], 'dress-black': ['#4d4d47','#1d231f'], 'bag-brown': ['#b18d68','#75553e'] };
+const colors = {
+  'shirt-white': ['#fffefa', '#d9d8ce'],
+  'blazer-dark': ['#515352', '#25282a'],
+  'pants-sand': ['#d2c2aa', '#b2a18a'],
+  'knit-sage': ['#9ba692', '#697c67'],
+  'jeans-blue': ['#8394a8', '#4e6780'],
+  'loafers-black': ['#393b38', '#151a17'],
+  'dress-black': ['#4d4d47', '#1d231f'],
+  'bag-brown': ['#b18d68', '#75553e'],
+};
 for (const [id, shape] of Object.entries(shapes)) {
   const [light, dark] = colors[id];
-  await writeFile(`public/images/${id}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="340" viewBox="0 0 320 340"><defs><linearGradient id="cloth" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="${dark}"/><stop offset=".35" stop-color="${light}"/><stop offset=".72" stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient><filter id="shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="0" dy="9" stdDeviation="7" flood-color="#343c30" flood-opacity=".12"/></filter></defs><g stroke="${dark}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#shadow)">${shape}</g></svg>`);
+  await writeFile(
+    `public/images/${id}.svg`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="340" viewBox="0 0 320 340"><defs><linearGradient id="cloth" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="${dark}"/><stop offset=".35" stop-color="${light}"/><stop offset=".72" stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient><filter id="shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="0" dy="9" stdDeviation="7" flood-color="#343c30" flood-opacity=".12"/></filter></defs><g stroke="${dark}" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#shadow)">${shape}</g></svg>`,
+  );
 }

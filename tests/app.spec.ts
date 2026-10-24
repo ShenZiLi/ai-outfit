@@ -1,10 +1,13 @@
 import { test, expect } from '@playwright/test';
 import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 test('衣物入库、修改、筛选与刷新保留、删除', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: '衣橱', exact: true }).click();
   await page.getByRole('button', { name: '添加衣物' }).click();
-  await page.getByLabel('衣物照片', { exact: true }).setInputFiles(path.resolve('public/images/editorial.png'));
+  await page
+    .getByLabel('衣物照片', { exact: true })
+    .setInputFiles(path.resolve('public/images/editorial.png'));
   await page.getByLabel('衣物名称').fill('我的测试白衬衫');
   await page.getByRole('button', { name: '保存衣物', exact: true }).click();
   await expect(page.getByText('我的测试白衬衫', { exact: true })).toBeVisible();
@@ -53,4 +56,33 @@ test('试衣必须明确确认照片上传，取消后不产生结果', async ({
   await page.getByRole('button', { name: '暂不上传' }).click();
   await expect(page.getByText('确认上传照片', { exact: true })).not.toBeVisible();
   await expect(page.getByRole('button', { name: '生成试衣效果', exact: true })).toBeVisible();
+});
+
+test('导出备份可原子恢复，损坏文件不覆盖现有档案', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: '我的档案' }).click();
+  await page.getByLabel('昵称').fill('备份时的名字');
+  await page.getByRole('button', { name: '保存档案' }).click();
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: '导出备份' }).click();
+  const backup = await downloadPromise;
+  const backupPath = (await backup.path())!;
+  const payload = JSON.parse(await readFile(backupPath, 'utf8'));
+  expect(payload.garments).toHaveLength(8);
+  expect(payload.profile.nickname).toBe('备份时的名字');
+  expect(payload).not.toHaveProperty('apiKey');
+  await page.getByLabel('昵称').fill('修改后的名字');
+  await page.getByRole('button', { name: '保存档案' }).click();
+  await page.getByLabel('导入衣橱备份').setInputFiles(backupPath);
+  await expect(page.getByText('准备恢复 8 件衣物与 0 套穿搭')).toBeVisible();
+  await expect(page.getByLabel('昵称')).toHaveValue('修改后的名字');
+  await page.getByRole('button', { name: '确认替换并恢复' }).click();
+  await expect(page.getByLabel('昵称')).toHaveValue('备份时的名字');
+  await page.getByLabel('导入衣橱备份').setInputFiles({
+    name: 'bad.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{bad}'),
+  });
+  await expect(page.getByRole('alert')).toContainText('不是有效的 JSON');
+  await expect(page.getByLabel('昵称')).toHaveValue('备份时的名字');
 });

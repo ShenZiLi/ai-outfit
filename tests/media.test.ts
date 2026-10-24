@@ -7,5 +7,7 @@ it('本地图片直接解码为 Blob，不受 connect-src 限制且不发起网�
     expect(await blob.text()).toBe('hello');
     expect(blob.type).toBe('image/jpeg');
     expect(fetchSpy).not.toHaveBeenCalled();
-  } finally { fetchSpy.mockRestore(); }
+  } finally {
+    fetchSpy.mockRestore();
+  }
 });

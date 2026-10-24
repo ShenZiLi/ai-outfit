@@ -11,7 +11,8 @@ export interface AppContextType {
   createOutfit: (ids?: string[], image?: string) => void;
   tryGarment: (id: string) => void;
   showProfile: () => void;
-  apiKey: string; setApiKey: (key: string) => void;
+  apiKey: string;
+  setApiKey: (key: string) => void;
 }
 export const AppContext = createContext<AppContextType | null>(null);
 export function useApp() {

@@ -3,7 +3,11 @@ import { initialState } from './seed';
 import { parseBackup, type WardrobeState } from './domain';
 let db: Promise<IDBPDatabase> | undefined;
 function database() {
-  return db ??= openDB('yixu-wardrobe', 1, { upgrade(database) { database.createObjectStore('state'); } });
+  return (db ??= openDB('yixu-wardrobe', 1, {
+    upgrade(database) {
+      database.createObjectStore('state');
+    },
+  }));
 }
 export async function loadState(): Promise<WardrobeState> {
   const databaseInstance = await database();

@@ -2,12 +2,123 @@ import { useState } from 'react';
 import { Pencil, Sparkles, Trash2, Heart, Check } from 'lucide-react';
 import { useApp } from '../context';
 import { removeGarment, type Garment } from '../domain';
-export default function GarmentDetail({ garment, onEdit, onClose }: { garment: Garment; onEdit: () => void; onClose: () => void }) {
+export default function GarmentDetail({
+  garment,
+  onEdit,
+  onClose,
+}: {
+  garment: Garment;
+  onEdit: () => void;
+  onClose: () => void;
+}) {
   const { change, notify, tryGarment } = useApp();
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
-  async function remove() { setBusy(true); try { await change(s => removeGarment(s, garment.id)); notify('衣物已删除'); onClose(); } catch (e) { notify((e as Error).message); } finally { setBusy(false); } }
-  async function favorite() { try { await change(s => ({ ...s, garments: s.garments.map(g => g.id === garment.id ? { ...g, favorite: !g.favorite } : g) })); } catch (e) { notify((e as Error).message); } }
+  async function remove() {
+    setBusy(true);
+    try {
+      await change((s) => removeGarment(s, garment.id));
+      notify('衣物已删除');
+      onClose();
+    } catch (e) {
+      notify((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function favorite() {
+    try {
+      await change((s) => ({
+        ...s,
+        garments: s.garments.map((g) =>
+          g.id === garment.id ? { ...g, favorite: !g.favorite } : g,
+        ),
+      }));
+    } catch (e) {
+      notify((e as Error).message);
+    }
+  }
   const canTry = !['鞋履', '配饰'].includes(garment.category);
-  return <div className="detail-content"><div className="detail-photo"><img src={garment.image} alt={garment.name} /><button className={`favorite-button ${garment.favorite ? 'active' : ''}`} aria-label="收藏此衣物" aria-pressed={garment.favorite} onClick={favorite}><Heart fill={garment.favorite ? 'currentColor' : 'none'} size={21} /></button>{garment.isSample && <span className="sample-label">原创示例衣物</span>}</div><p className="eyebrow">A PIECE OF YOUR STORY</p><h2>{garment.name}</h2><div className="chips static-chips"><span className="chip">{garment.category}</span><span className="chip">{garment.color}</span><span className="chip">{garment.season}</span>{garment.occasions.map(o => <span className="chip" key={o}>{o}</span>)}</div><div className="detail-facts"><div><span>品牌</span><b>{garment.brand || '还未记录'}</b></div><div><span>购入价格</span><b>{garment.price ? `¥ ${garment.price.toFixed(2)}` : '还未记录'}</b></div><div><span>穿着次数</span><b>{garment.wornCount} 次</b></div><div><span>每次穿着成本</span><b>{garment.price && garment.wornCount ? `¥ ${(garment.price / garment.wornCount).toFixed(2)}` : '记录穿搭后计算'}</b></div></div><div className="button-row"><button className="button button-outline" onClick={onEdit}><Pencil size={17} /> 编辑衣物</button><button disabled={!canTry} className="button button-primary" onClick={() => { onClose(); tryGarment(garment.id); }}><Sparkles size={17} /> {canTry ? '去试穿' : '该分类暂不支持试穿'}</button></div>{confirm ? <div className="delete-confirm"><p>确定删除这件衣物？已保存穿搭会移除此单品，试衣图片仍保留。</p><div className="button-row"><button className="button button-outline" onClick={() => setConfirm(false)}>保留衣物</button><button className="button button-danger" disabled={busy} onClick={remove}><Check size={16} /> 确认删除</button></div></div> : <button className="text-button danger-text" onClick={() => setConfirm(true)}><Trash2 size={16} /> 删除衣物</button>}</div>;
+  return (
+    <div className="detail-content">
+      <div className="detail-photo">
+        <img src={garment.image} alt={garment.name} />
+        <button
+          className={`favorite-button ${garment.favorite ? 'active' : ''}`}
+          aria-label="收藏此衣物"
+          aria-pressed={garment.favorite}
+          onClick={favorite}
+        >
+          <Heart fill={garment.favorite ? 'currentColor' : 'none'} size={21} />
+        </button>
+        {garment.isSample && <span className="sample-label">原创示例衣物</span>}
+      </div>
+      <p className="eyebrow">A PIECE OF YOUR STORY</p>
+      <h2>{garment.name}</h2>
+      <div className="chips static-chips">
+        <span className="chip">{garment.category}</span>
+        <span className="chip">{garment.color}</span>
+        <span className="chip">{garment.season}</span>
+        {garment.occasions.map((o) => (
+          <span className="chip" key={o}>
+            {o}
+          </span>
+        ))}
+      </div>
+      <div className="detail-facts">
+        <div>
+          <span>品牌</span>
+          <b>{garment.brand || '还未记录'}</b>
+        </div>
+        <div>
+          <span>购入价格</span>
+          <b>{garment.price ? `¥ ${garment.price.toFixed(2)}` : '还未记录'}</b>
+        </div>
+        <div>
+          <span>穿着次数</span>
+          <b>{garment.wornCount} 次</b>
+        </div>
+        <div>
+          <span>每次穿着成本</span>
+          <b>
+            {garment.price && garment.wornCount
+              ? `¥ ${(garment.price / garment.wornCount).toFixed(2)}`
+              : '记录穿搭后计算'}
+          </b>
+        </div>
+      </div>
+      <div className="button-row">
+        <button className="button button-outline" onClick={onEdit}>
+          <Pencil size={17} /> 编辑衣物
+        </button>
+        <button
+          disabled={!canTry}
+          className="button button-primary"
+          onClick={() => {
+            onClose();
+            tryGarment(garment.id);
+          }}
+        >
+          <Sparkles size={17} /> {canTry ? '去试穿' : '该分类暂不支持试穿'}
+        </button>
+      </div>
+      {confirm ? (
+        <div className="delete-confirm">
+          <p>确定删除这件衣物？已保存穿搭会移除此单品，试衣图片仍保留。</p>
+          <div className="button-row">
+            <button className="button button-outline" onClick={() => setConfirm(false)}>
+              保留衣物
+            </button>
+            <button className="button button-danger" disabled={busy} onClick={remove}>
+              <Check size={16} /> 确认删除
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button className="text-button danger-text" onClick={() => setConfirm(true)}>
+          <Trash2 size={16} /> 删除衣物
+        </button>
+      )}
+    </div>
+  );
 }
