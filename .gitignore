@@ -24,3 +24,14 @@ venv/
 
 # Misc
 *.local
+
+# Build and verification output
+artifacts/
+test-results/
+playwright-report/
+*.tsbuildinfo
+android/.gradle/
+android/local.properties
+android/app/src/main/assets/www/
+*.apk
+.device/

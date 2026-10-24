@@ -11,5 +11,5 @@ const examples: Array<Pick<Garment, 'id' | 'name' | 'category' | 'color' | 'seas
 ];
 export function initialState(): WardrobeState {
   return { version: 1, garments: examples.map((g, i) => ({ ...g, image: `/images/${g.id}.svg`, brand: '示例衣物', wornCount: 0, createdAt: `2026-10-${String(24 - i).padStart(2, '0')}`, isSample: true })),
-    outfits: [], history: [], profile: { nickname: '我的', height: 165, weight: 52, photo: '', provider: 'idm', apiBase: 'https://dashscope.aliyuncs.com/api/v1' } };
+    outfits: [], history: [], profile: { nickname: '我的', height: 165, weight: 52, photo: '', provider: 'fashn', apiBase: 'https://dashscope.aliyuncs.com/api/v1' } };
 }

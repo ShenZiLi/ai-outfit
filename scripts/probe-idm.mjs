@@ -10,7 +10,7 @@ const evidence = { checkedAt: new Date().toISOString(), provider: origin, person
 await mkdir('artifacts', { recursive: true });
 let client;
 try {
-  client = await Client.connect(origin);
+  client = await Client.connect(origin, { events: ['data', 'status', 'log'] });
   const job = client.submit('/tryon', [
     { background: handle_file(person), layers: [], composite: null },
     handle_file(garment), 'short sleeve shirt', true, true, 20, 42,
@@ -28,8 +28,10 @@ try {
         await writeFile('artifacts/idm-live-result.webp', Buffer.from(await response.arrayBuffer()));
         evidence.result = 'artifacts/idm-live-result.webp';
       }
+      if (event.type === 'status' && event.stage === 'error') throw new Error(event.message || 'Public demo returned an error');
     }
   } finally { clearTimeout(timer); }
+  if (!evidence.result) throw new Error('Public demo returned no generated image');
 } catch (error) {
   evidence.error = String(error);
   console.error(evidence.error);

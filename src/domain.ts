@@ -15,11 +15,11 @@ export interface Outfit {
 }
 export interface TryonResult {
   id: string; image: string; person: string; garmentImage: string;
-  garmentId: string; garmentName: string; provider: 'idm' | 'aliyun'; createdAt: string;
+  garmentId: string; garmentName: string; provider: 'fashn' | 'idm' | 'aliyun'; createdAt: string;
 }
 export interface Profile {
   nickname: string; height: number; weight: number; photo: string;
-  provider: 'idm' | 'aliyun'; apiBase: string;
+  provider: 'fashn' | 'idm' | 'aliyun'; apiBase: string;
 }
 export interface WardrobeState {
   version: 1; garments: Garment[]; outfits: Outfit[]; history: TryonResult[]; profile: Profile;
@@ -95,11 +95,11 @@ export function parseBackup(raw: string): WardrobeState {
   }
   for (const h of s.history) {
     if (!h || !validImage(h.image) || !validImage(h.person) || !validImage(h.garmentImage) || !text(h.garmentId, 100) ||
-      !text(h.garmentName, 60) || !['idm', 'aliyun'].includes(h.provider) || !text(h.createdAt, 50)) throw new Error('备份的试衣图片或记录无效');
+      !text(h.garmentName, 60) || !['fashn', 'idm', 'aliyun'].includes(h.provider) || !text(h.createdAt, 50)) throw new Error('备份的试衣图片或记录无效');
   }
   const p = s.profile;
   if (!text(p.nickname, 30) || !number(p.height, 250) || !number(p.weight, 350) || (p.photo !== '' && !validImage(p.photo)) ||
-    !['idm', 'aliyun'].includes(p.provider) || !text(p.apiBase, 250)) throw new Error('备份的个人档案无效');
+    !['fashn', 'idm', 'aliyun'].includes(p.provider) || !text(p.apiBase, 250)) throw new Error('备份的个人档案无效');
   // Whitelist the persisted schema so unknown fields, including credentials, are discarded.
   return { version: 1, garments: s.garments.map(({ id, name, image, category, color, season, occasions, brand, price, favorite, wornCount, createdAt, isSample }) =>
     ({ id, name: name.trim(), image, category, color, season, occasions, brand, price, favorite, wornCount, createdAt, ...(isSample ? { isSample: true } : {}) })),
