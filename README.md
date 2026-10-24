@@ -37,6 +37,14 @@
 
 照片在确认后才发送给所选服务，处理与留存由服务方决定。密钥仅在当前会话使用，不进入 Git 或备份。应用无自建账号、广告和行为分析。卸载会删除本地衣橱，请先备份；备份含照片，请妥善保管。
 
+## GitHub Actions 构建
+
+推送到 `main` 或 `codex/**`、提交 Pull Request，或在 Actions 中手动运行 **Build Android APK**，都会执行依赖安装、格式检查、单元测试、前端打包及安卓构建/静态检查。
+
+在 [Actions](https://github.com/ShenZiLi/ai-outfit/actions/workflows/android.yml) 打开成功的运行，下载 **yixu-wardrobe-android** 产物。ZIP 内含可安装 APK 和 SHA256 校验文件，保留 30 天。运行摘要也提供下载入口。测试与 lint 报告单独保留 14 天。
+
+云端使用 Ubuntu24.04、Node24、JDK17、Android SDK36 与 Build Tools36.1.0，不需要本机路径、模型密钥或正式签名密钥。生成的是调试签名 APK；云端和本机调试签名可能不同，若更新安装提示签名冲突，请先在旧版导出衣橱备份，再卸载旧版安装新包、导入备份。
+
 ## 本地开发与构建
 
 环境：Node.js 22.12+（本机使用 24）、JDK 17、Android SDK 36、Build Tools 36.1.0。SDK 默认读取 `ANDROID_HOME` / `ANDROID_SDK_ROOT`，或 Windows 的 `%LOCALAPPDATA%\Android\Sdk`。
