@@ -26,5 +26,3 @@ Create ONE stunning modern fashion styling app icon for YIXU. Completely new con
 ### 04-indigo
 
 Create ONE striking sophisticated app icon for YIXU personal wardrobe and outfit styling. Completely new concept, NO clothes hanger, NO sparkle. Bold geometric origami kimono / tailored shirt emblem folded from thick vivid warm ivory cotton paper, with a tiny vermilion red inner fold. Deep saturated midnight indigo full bleed square background. Architectural paper folds, crisp edge bevels, beautiful thick paper fiber and subtle tactile grain, dramatic precise light and sculptural shadows, authentic high end editorial still life. Balanced asymmetric folded garment silhouette, masterful Japanese modernist graphic design, extremely clean and iconic, center 65% square with generous margins. Front-facing view. No words, no letters, no text, no mockup, no frame, no rounded tile. Square 1024x1024.
-
-
