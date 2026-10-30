@@ -1,96 +1,111 @@
-# 衣序 YIXU · AI 衣橱
+<p align="center"><img src="public/icons/yixu-icon-192.png" width="96" alt="YIXU glacier-blue origami garment icon" /></p>
 
-参考淘宝 AI 试衣的「个人形象 → 选衣 → 上身效果」流程，做一个把已有衣服穿得更好的安卓应用。原创界面与素材，非淘宝官方产品。
+# YIXU · AI Wardrobe
 
-## 直接使用
+**Give the clothes you own more possibilities.** A local-first Android wardrobe with outfit planning and online AI virtual try-on.
 
-安卓安装包：[`artifacts/yixu-wardrobe-1.0.0.apk`](artifacts/yixu-wardrobe-1.0.0.apk)。构建后同时生成 SHA256 校验文件。
+[简体中文](README.zh-CN.md) · [Android builds](https://github.com/ShenZiLi/ai-outfit/actions/workflows/android.yml) · [Verification](docs/verification.md)
 
-1. 将 APK 传到安卓手机，允许该来源安装后打开「衣序」。支持 Android 8.0 及以上，系统 Android System WebView / Chrome 需为 111 或更新版本。
-2. 在「衣橱」添加衣物，从相册导入或拍照。记录分类、颜色、季节、场景、品牌与价格，可搜索、收藏和编辑。
-3. 在「试衣间」添加全身照或使用 AI 示例模特，再选一件衣物。确认上传后，等待真实 AI 生成上身效果。
-4. 在结果页对比原图、导出图片或保存到「穿搭集」。点「今天穿了」记录穿着，单品同步累计次数与每次穿着成本。
-5. 右上角头像进入「我的档案」，设置个人信息、切换试衣服务、导出或恢复完整衣橱备份。
+Catalog clothes, build outfits, and preview a garment on a portrait. The app interface is currently in Chinese. This independent project follows the portrait → garment → try-on workflow; it is not affiliated with Taobao.
 
-衣橱、照片和历史保存在本机。离线可整理衣物和查看已保存结果。**生成新试衣图需要联网，默认 FASHN 公共服务需要能访问 Hugging Face。** 它是作者公共演示，可能排队、限额或不可用。应用显示真实状态和错误，不用叠图或预制图片冒充新生成。
+## App preview
 
-初次打开附带 8 件明确标注的原创示例衣物。可直接删除；清空后不会重新注入。首页封面和示例模特为 AI 创作。本地场景搭配为规则推荐，界面明确标识。
+These historical Android emulator screenshots were captured during the October 24, 2026 verification. They show the existing app, including a previously generated try-on result. Fresh real-phone screenshots are pending device unlock; see [the current verification status](docs/verification-2026-10-30.md).
 
-## 功能
+| Today | Wardrobe | Fitting room |
+| --- | --- | --- |
+| ![Today: wardrobe statistics and inspiration](docs/screenshots/today.png) | ![Wardrobe: categories and sample garments](docs/screenshots/wardrobe.png) | ![Fitting room: previously generated try-on result](docs/screenshots/tryon.png) |
 
-| 模块 | 已实现行为 |
+## Features
+
+- **Wardrobe:** gallery/camera import, categories, colors, seasons, occasions, brand and price; search, filters, sorting, favorites, editing and deletion.
+- **Outfits:** combine existing items, save notes, record daily wear, and track wear counts and cost per wear. Local outfit suggestions use rules.
+- **Virtual try-on:** select a portrait and top, jacket, bottom or dress; confirm upload, follow the queue, cancel, compare, export, and save the downloaded result.
+- **Personal archive:** profile, try-on history, outfit collection, and full JSON backup/restore. Data and photos are stored on the device.
+- **Offline use:** organize and browse local content. New AI results require internet access.
+
+First launch includes eight labeled original sample garments and an AI-generated sample portrait. Deleted samples are not reinserted after clearing the wardrobe. Shoes and accessories support cataloging and outfit combinations, but not virtual try-on.
+
+## Install and use
+
+1. Open [Build Android APK](https://github.com/ShenZiLi/ai-outfit/actions/workflows/android.yml), select a successful run, download **yixu-wardrobe-android**, and extract the APK plus SHA256 file. GitHub may require sign-in; artifacts expire after 30 days.
+2. Install on Android 8.0+ with Android System WebView / Chrome 111+. Current builds use debug signing.
+3. Add clothes in **衣橱** (Wardrobe); choose a portrait and garment in **试衣间** (Fitting room), then confirm upload.
+4. Save combinations/results in **穿搭集** (Outfits). Open the top-right avatar to manage your profile and export backups.
+
+Local packaging writes `artifacts/yixu-wardrobe-1.0.0.apk`, an ignored build output, not a file distributed in Git. Cloud/local debug keys can differ: export your wardrobe before uninstalling if an update reports a signature mismatch, then reinstall and restore.
+
+## AI services and privacy
+
+| Provider | Limits |
 | --- | --- |
-| 今日 | 实际衣橱统计、收藏单品、按场景组合现有衣物、保存推荐组合 |
-| 衣橱 | 相册/拍照入库、增删改、中文关键词组合搜索、分类/季节/收藏筛选、排序 |
-| 试衣间 | 本人或示例人像、上装/外套/下装/连衣裙、上传确认、真实排队、取消、超时、原图对比、历史与图片导出 |
-| 穿搭集 | 单品组合或试衣结果、场景/笔记、收藏、穿着足迹、删除 |
-| 我的 | 昵称、照片、身高体重、服务配置、完整 JSON 备份校验与确认恢复 |
-| 安卓系统 | 离线打包资源、系统文件选择/拍照、系统文件保存、返回键、安全区域、旧 WebView 提示 |
+| FASHN · default | Public FASHN VTON 1.5 demo on Hugging Face, no API key. Requires connectivity to the service; availability, queue time and GPU quota vary. |
+| IDM-VTON · research fallback | Tops only, noncommercial research restrictions. Earlier checks encountered public server errors. |
+| Alibaba Cloud · optional | Your own Beijing-region Try-On Plus access and key; charges may apply. Protocol tests exist; no real-account validation is claimed. |
 
-鞋履与配饰支持衣橱管理和穿搭组合，当前模型不支持其换装。AI 效果可能改变细节，不能判定实际尺码与合身度。身高体重只作档案记录。
+Photos are uploaded only after confirmation. Remote processing/retention follows the provider's policies. Keys remain in the current session and are excluded from backups. The app has no accounts, ads or behavioral analytics.
 
-## 服务与隐私
+AI can change clothing details and cannot establish size or fit. Height/weight are profile records only. Uninstalling removes local data; backups contain photos. Production use needs a stable service and review of applicable terms.
 
-- **FASHN（默认）**：作者公开的 FASHN VTON 1.5 演示，无需 API Key，已完成真实调用验证。
-- **IDM-VTON（备用研究演示）**：仅上装，仅限非商业研究。当前检查中公共演示曾返回服务端错误，可切回 FASHN。
-- **阿里云（可选适配）**：需自行开通北京地域试衣 Plus 并提供密钥，可能收费。只有协议、错误与任务状态测试，未用真实账户验证，不属于默认开箱体验。服务地址与图片输入要求以账户当前文档为准。
+## Development
 
-照片在确认后才发送给所选服务，处理与留存由服务方决定。密钥仅在当前会话使用，不进入 Git 或备份。应用无自建账号、广告和行为分析。卸载会删除本地衣橱，请先备份；备份含照片，请妥善保管。
+Requires Node.js 22.12+ (CI uses 24), npm, JDK 17, Android SDK Platform 36 and Build Tools 36.1.0. Dependencies are locked in `package-lock.json`.
 
-## GitHub Actions 构建
-
-推送到 `main` 或 `codex/**`、提交 Pull Request，或在 Actions 中手动运行 **Build Android APK**，都会执行依赖安装、格式检查、单元测试、前端打包及安卓构建/静态检查。
-
-在 [Actions](https://github.com/ShenZiLi/ai-outfit/actions/workflows/android.yml) 打开成功的运行，下载 **yixu-wardrobe-android** 产物。ZIP 内含可安装 APK 和 SHA256 校验文件，保留 30 天。运行摘要也提供下载入口。测试与 lint 报告单独保留 14 天。
-
-云端使用 Ubuntu24.04、Node24、JDK17、Android SDK36 与 Build Tools36.1.0，不需要本机路径、模型密钥或正式签名密钥。生成的是调试签名 APK；云端和本机调试签名可能不同，若更新安装提示签名冲突，请先在旧版导出衣橱备份，再卸载旧版安装新包、导入备份。
-
-## 本地开发与构建
-
-环境：Node.js 22.12+（本机使用 24）、JDK 17、Android SDK 36、Build Tools 36.1.0。SDK 默认读取 `ANDROID_HOME` / `ANDROID_SDK_ROOT`，或 Windows 的 `%LOCALAPPDATA%\Android\Sdk`。
-
-```powershell
+```sh
+git clone https://github.com/ShenZiLi/ai-outfit.git
+cd ai-outfit
 npm ci
 npm run dev
 ```
 
-浏览器打开终端显示的地址。支持手机、横屏、平板和桌面。浏览器预览与安卓应用数据相互独立。
+Open Vite's printed address, normally `http://localhost:5173`. Browser and Android app storage are separate.
 
-```powershell
-npm run android:build
-```
-
-脚本将页面与图片打进 APK，执行 Android lint，输出 APK 和校验摘要。默认调试签名包适合本地体验；上架需正式签名。
-
-可在 Android Studio 打开 `android/`。修改前端后需重新运行打包脚本。仅修改 Java 时可用 `android/gradlew.bat -p android assembleDebug lintDebug`。不要提交 `local.properties`、缓存或密钥。
-
-## 验证
-
-```powershell
+```sh
+npm run build
+npm run preview
 npm test
 npm run format:check
 npx playwright install chromium
 npm run test:e2e
 ```
 
-默认不调用外部 GPU。真实测试仅上传项目公开的 AI 示例人像与原创示例衣物：
+### Android build
 
-```powershell
-$env:YIXU_LIVE_AI = '1'
-npx playwright test tests/live-tryon.spec.ts --workers=1
+**Windows:** set `ANDROID_HOME` or `ANDROID_SDK_ROOT`, then run `npm run android:build`. The PowerShell script bundles web assets, builds/lints Android, and writes the APK and checksum.
+
+**macOS/Linux:** configure `android/local.properties` with `sdk.dir=/absolute/path/to/sdk`, then:
+
+```sh
+npm run build
+mkdir -p android/app/src/main/assets/www
+cp -R dist/. android/app/src/main/assets/www/
+cd android
+bash ./gradlew --console=plain assembleDebug lintDebug
 ```
 
-`node scripts/probe-fashn.mjs` 使用原创人像与作者公共服装样本，记录真实任务状态和输出到 `artifacts/`。应用会把生成图片下载到本地，不依赖临时链接。
+The APK is `android/app/build/outputs/apk/debug/app-debug.apk`. Android Studio can open `android/`. Rebundle web assets after frontend changes. Keep SDK paths, secrets, caches and signing keys out of Git; public distribution needs release signing.
 
-`scripts/start-emulator.ps1` 创建独立测试设备，需要 API36 Google APIs x86_64 镜像。`scripts/verify-android.mjs` 核验打包资源、原生备份、重启、离线重载与返回键；`--live` 额外真实试衣。只连接 `emulator-5582`。原生导入/导出测试样本准备见 [验证记录](docs/verification.md)。
+CI installs dependencies, checks formatting, runs unit tests, builds the frontend, and builds/lints Android on pushes to `main` / `codex/**`, pull requests and manual dispatch.
 
-## 结构与资料
+### Integration checks
 
-- `src/domain.ts`：数据、校验、检索、搭配与备份。
-- `src/storage.ts`：IndexedDB 持久化，保存失败保留原状态。
-- `src/screens/`、`src/components/`：界面与表单。
-- `src/tryon.ts`：真实服务适配与错误处理。
-- `android/app/src/main/java/`：安卓宿主、照片、文件和受限网络桥。
-- [调研决策](docs/research.md)、[验证记录](docs/verification.md)、[第三方说明](THIRD_PARTY_NOTICES.md)。
+`YIXU_LIVE_AI=1 npx playwright test tests/live-tryon.spec.ts --workers=1` uploads only project samples to the public GPU service; network/quota limits can prevent completion. Normal tests do not need it.
 
-规范见 [AGENTS.md](AGENTS.md)：每次完成变更并验证后，提交本地 Git。
+`npm run test:android` targets only the dedicated `emulator-5582`, not an arbitrary connected phone. See [fixture preparation and historical checks](docs/verification.md). [Current verification status](docs/verification-2026-10-30.md) records the completed build checks and the pending real-phone installation and screenshots.
+
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `src/domain.ts`, `src/storage.ts` | Wardrobe rules, validation, backups and IndexedDB |
+| `src/screens/`, `src/components/` | React screens, forms and dialogs |
+| `src/tryon.ts` | Provider adapters, cancellation and result download |
+| `android/app/src/main/java/` | Android host, system photos/files and restricted network bridge |
+| `public/icons/` | Selected imagegen glacier-blue origami icon |
+| `docs/icon-concepts/` | Design candidates and generation prompts |
+
+## Contribute and credits
+
+[Open an issue](https://github.com/ShenZiLi/ai-outfit/issues) with reproduction steps, device/WebView version and sanitized logs, or send a focused PR. Run relevant checks; do not commit personal photos, credentials, local configuration or build outputs.
+
+Read [project rules](AGENTS.md), [research decisions](docs/research.md) and [third-party notices](THIRD_PARTY_NOTICES.md). Editorial/sample portrait images and the selected icon were generated with imagegen; sample garment SVGs are original assets. No project-level code license has been declared; dependency and model licenses apply separately.

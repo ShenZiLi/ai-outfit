@@ -13,4 +13,4 @@ FASHN VTON 1.5 作者为 FASHN AI，https://github.com/fashn-AI/fashn-vton-1.5 �
 
 IDM-VTON：https://github.com/yisol/IDM-VTON ，具有非商业许可限制。本项目不分发其代码、权重或原始示例照片，演示服务规则由作者决定。
 
-首页照片由内置 imagegen 生成。本应用无淘宝品牌、私有接口、商品数据库或抓取素材，不代表淘宝及上述服务方。
+首页照片、示例人像与冰川蓝折纸应用图标由内置 imagegen 生成。图标候选和提示词见 `docs/icon-concepts/`。本应用无淘宝品牌、私有接口、商品数据库或抓取素材，不代表淘宝及上述服务方。
